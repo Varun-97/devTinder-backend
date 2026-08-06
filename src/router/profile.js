@@ -1,6 +1,7 @@
 import express from "express";
 import { userAuth } from "../middlewares/auth.js";
-import { validateEditProfileData } from "../utils/validation.js";
+import { validateEditProfileData, validatePasswordStrong } from "../utils/validation.js";
+import bcrypt from 'bcrypt'
 
 const profileRouter = express.Router()
 
@@ -29,6 +30,32 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
         })
         await user.save()
         res.json({ message: `${user.firstName} profile updated successfully` })
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
+})
+
+profileRouter.patch("/profile/password", userAuth, async (req, res) => {
+    try {
+        const user = req.user
+        const { oldPassword, newPassword } = req.body
+        console.log("first", user, oldPassword, newPassword)
+        if (!user) {
+            throw new Error("User not found")
+        }
+        const isValidPassword = await user.validatePassword(oldPassword)
+        console.log("isValidPassword", isValidPassword)
+        const isStrongPassword = validatePasswordStrong(newPassword)
+        console.log("isStrongPassword", isStrongPassword)
+        if (!isValidPassword || !isStrongPassword) {
+            throw new Error("Invalid password")
+        }
+
+        const passwordHash = await bcrypt.hash(newPassword, 10)
+        console.log("passwordHash", passwordHash)
+        user.password = passwordHash
+        await user.save()
+        res.json({ message: "Password updated successfully" })
     } catch (error) {
         res.status(400).send(error.message)
     }

@@ -7,7 +7,6 @@ import User from '../models/user.js'
 const authRouter = express.Router()
 
 authRouter.post("/signup", async (req, res) => {
-    console.log(req.body)
     const { firstName, lastName, email, password } = req.body
     try {
         //apply body validation

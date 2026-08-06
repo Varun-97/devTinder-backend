@@ -18,7 +18,13 @@ const validateEditProfileData = (req) => {
     const reqFields = Object.keys(req.body)
     const isAllowed = reqFields.every((field) => allowedEditFields.includes(field))
     return isAllowed ? true : false
-
 }
 
-export { validateSignupData, validateEditProfileData }
+const validatePasswordStrong = (password) => {
+    if (!validator.isStrongPassword(password)) {
+        throw new Error("Password is not strong")
+    }
+    return true
+}
+
+export { validateSignupData, validateEditProfileData, validatePasswordStrong }
