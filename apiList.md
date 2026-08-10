@@ -15,10 +15,13 @@
 ## connection request router
 - POST /request/send/intrested/:userId
 - POST /request/send/ignore/:userId
+- POST /request/send/:status/:toUserId generic form
+
 - POST /request/review/accepted/:requestId
 - POST /request/review/rejected/:requestId
+- POST /request/review/:status/:requestId generic form
 
 ## user router
+- GET /user/requests/received
 - GET /user/connections
-- GET /user/requests/recieved
 - GET /user/feed
