@@ -3,8 +3,12 @@ import User from '../models/user.js'
 
 const userAuth = async (req, res, next) => {
     try {
-        const { token } = req.cookies
-        if (!token) {
+        const authHeader = req.headers.authorization
+        if (!authHeader) {
+            throw new Error("No token provided !!!!")
+        }
+        const token = authHeader?.split(' ')[1]
+        if (!token || token === null || token === undefined) {
             throw new Error("Invalid token !!!!")
         }
         const decodedObj = jwt.verify(token, 'varun-secret-key')

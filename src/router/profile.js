@@ -7,9 +7,10 @@ const profileRouter = express.Router()
 
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
     try {
-        const user = req.user
+        const user = req.user.toObject()
+        const { password, ...resUser } = user
         if (user) {
-            res.send(user)
+            res.json({ user: resUser })
         }
         else {
             throw new Error("User not found")
@@ -29,7 +30,7 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
             user[key] = req.body[key]
         })
         await user.save()
-        res.json({ message: `${user.firstName} profile updated successfully` })
+        res.json({ message: `${user.firstName} profile updated successfully`, user })
     } catch (error) {
         res.status(400).send(error.message)
     }

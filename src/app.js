@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import connnectDB from './config/database.js'
 import cookieParser from 'cookie-parser'
 import authRouter from './router/auth.js'
@@ -7,6 +8,8 @@ import requestRouter from './router/request.js'
 import userRouter from './router/user.js'
 
 const app = express()
+
+app.use(cors())
 app.use(cookieParser())
 app.use(express.json())
 
